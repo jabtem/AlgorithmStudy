@@ -1,0 +1,13 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<vector<int>> dots) {
+    sort(dots.begin(), dots.end());
+    
+    int answer = (dots[3][0] - dots[0][0]) * (dots[3][1]-dots[0][1]);
+    
+    return answer;
+}
