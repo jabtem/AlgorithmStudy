@@ -13,8 +13,8 @@ int solution(vector<string> babbling) {
 		{
 			if (s.compare(i, 3, "aya") == 0 && flag != 1)
 			{
-					i += 3;
-					flag = 1;
+				i += 3;
+				flag = 1;
 			}
 			else if (s.compare(i, 3, "woo") == 0 && flag != 2)
 			{
