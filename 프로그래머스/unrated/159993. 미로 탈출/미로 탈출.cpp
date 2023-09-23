@@ -9,18 +9,30 @@ int dy[4] = {1 ,-1 , 0, 0};
 
 struct Node{
     int x,y;
-    int d;
-    Node(int x, int y, int d)
-        : x(x), y(y), d(d) {}
+    //g : 시작부터 현재까지비용
+    //h : 현재위치에서 목적지까지 비용
+    //f : 총비용
+    int g,h,f;
+    Node(int x, int y, int g, int h)
+        : x(x), y(y), g(g), h(h), f(g + h) {}
     bool operator>(const Node& other)const
     {
         //목적지까지 총비용이 더낮은 노드를 top으로
-        return d > other.d;
+        return f > other.f;
     }
 };
 
+int myAbs(int n)
+{
+    return n > 0 ? n : n*-1;
+}
 
-int bfs(int sX, int sY, int gX, int gY, vector<string> &m)
+int heuristic(int x, int y, int goalX, int goalY)
+{
+    return myAbs(x - goalX) + myAbs(y - goalY);
+}
+
+int Astar(int sX, int sY, int gX, int gY, vector<string> &m)
 {
     //시작과 목적지가 같으면 0 반환
     if(sX == gX && sY == gY)
@@ -31,7 +43,7 @@ int bfs(int sX, int sY, int gX, int gY, vector<string> &m)
     int mapY = m[0].size();
     priority_queue<Node, vector<Node>, greater<Node>> q;
     
-    q.push(Node(sX,sY,0));
+    q.push(Node(sX,sY,0,0));
     check[sX][sY] = {true};
     while(!q.empty())
     {
@@ -40,7 +52,7 @@ int bfs(int sX, int sY, int gX, int gY, vector<string> &m)
         
         if(current.x == gX && current.y == gY)
         {
-            return current.d;
+            return current.g;
         }
         //상하좌우검사
         for(int i=0 ; i < 4 ; ++i)
@@ -57,8 +69,10 @@ int bfs(int sX, int sY, int gX, int gY, vector<string> &m)
                 continue;
         
             check[x][y] = true;
-            int d = current.d + 1;
-            q.push(Node(x,y,d));
+            int g = current.g + 1;
+            int h = 0;
+            int f = g + h;
+            q.push(Node(x,y,g,h));
         }
         
     }
@@ -101,9 +115,9 @@ int solution(vector<string> maps) {
     }
     
     //시작점에서 레버까지 거리
-    int ld = bfs(sx,sy,lx,ly,maps);
+    int ld = Astar(sx,sy,lx,ly,maps);
     //레버에서 목적지까지 거리
-    int gd = bfs(lx,ly,gx,gy,maps);
+    int gd = Astar(lx,ly,gx,gy,maps);
 
     if(ld <0 || gd < 0)
         return -1;
