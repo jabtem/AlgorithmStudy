@@ -2,54 +2,60 @@
 #include<queue>
 using namespace std;
 
-int dx[4] = {0,0,1,-1};
-int dy[4] = {1,-1,0,0};
-
-int solution(vector<vector<int> > maps)
+struct Node
 {
-    bool check[101][101] = {0};//방문여부
-    int dist[101][101] = {0};//해당 좌표까지 거리
-    queue<pair<int,int>> q;
+    int x,y,d;
+    Node(int x,int y,int d):x(x),y(y),d(d){}
     
-    //보드 y크기
-    int m = maps.size();
-    //보드 x크기
-    int n = maps[0].size();
-    int answer = 0;
+    bool operator > (const Node& other)const
+    {
+        return d > other.d;
+    }
+};
 
-    //시작설정
-    q.push({0,0});
+int dx[4] = {1,-1,0,0};
+int dy[4] = {0,0,1,-1};
+
+int bfs(vector<vector<int>> &map)
+{
+    int n= map.size();
+    int m = map[0].size();
+    
+    bool check[101][101] ={false};
+    priority_queue<Node,vector<Node>,greater<>> q;
+    
+    q.push(Node(0,0,1));
     check[0][0] = true;
-    dist[0][0] = 1;
     
     while(!q.empty())
     {
-        int curY = q.front().first;
-        int curX = q.front().second;
+        Node current = q.top();
         q.pop();
+        
+        if(current.x == n-1 && current.y == m-1)
+        {
+            return current.d;
+        }
         
         for(int i=0; i<4; ++i)
         {
-            int x = curX + dx[i];
-            int y = curY + dy[i];
+            int x = current.x + dx[i];
+            int y = current.y + dy[i];
             
-            //보드범위초과
-            if(x< 0 || x >=n || y < 0 || y >= m)
-                continue;
-            //이미간곳
-            if(check[y][x])
-                continue;
-            //막힌곳
-            if(maps[y][x] == 0)
-                continue;
-            
-            check[y][x] = true;
-            q.push({y,x});
-            dist[y][x] = dist[curY][curX]+1;
+            if(x < n && x>= 0 && y < m && y >=0 && map[x][y] != 0&& !check[x][y])
+            {
+                check[x][y] = true;
+                int d = current.d +1;
+                q.push(Node(x,y,d));
+            }
         }
     }
-
-    answer = dist[m-1][n-1] == 0 ? -1 : dist[m-1][n-1];
     
+    return -1;
+}
+
+int solution(vector<vector<int> > maps)
+{
+    int answer = bfs(maps);
     return answer;
 }
