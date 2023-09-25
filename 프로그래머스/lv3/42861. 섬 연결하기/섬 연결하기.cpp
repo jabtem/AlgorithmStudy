@@ -18,6 +18,9 @@ int find(vector<int>&v , int n)
 
 void unionParent(vector<int>&v, int a, int b)
 {
+    //이미 앞에서 루트노드를 찾고 호출하기때문에 생략가능
+    //a = find(v,a);
+    //b = find(v,b);
     //더작은쪽을 부모로함
     a < b ? v[b] = a : v[a] = b;
 }
@@ -25,9 +28,9 @@ void unionParent(vector<int>&v, int a, int b)
 int solution(int n, vector<vector<int>> costs) {
     int answer = 0;
     //각노드의 부모를 저장하는벡터
-    vector<int> root(n);
+    vector<int> root(n+1);
     
-    for(int i=0; i<n; ++i)
+    for(int i=0; i<=n; ++i)
     {
         //기본적으로 자기자신으로 초기화
         root[i] = i;
