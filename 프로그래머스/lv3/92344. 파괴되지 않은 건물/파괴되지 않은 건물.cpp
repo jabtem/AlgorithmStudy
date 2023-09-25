@@ -20,10 +20,8 @@ int solution(vector<vector<int>> board, vector<vector<int>> skill) {
         int x2 = s[3]+1;
         int y2 = s[4]+1;
         
-        change[x1][y1] += n;
-        change[x2][y2] += n;
-        change[x1][y2] += -n;
-        change[x2][y1] += -n;
+        change[x1][y1] += n;change[x1][y2] -= n;
+        change[x2][y1] -= n;change[x2][y2] += n;
     }
     
     //위에서 아래로 누적합
