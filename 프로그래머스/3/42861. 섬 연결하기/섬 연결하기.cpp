@@ -1,64 +1,55 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <queue>
 using namespace std;
 
-bool compare(vector<int> a , vector<int> b)
-{
-    return a[2] < b[2];
-}
+typedef pair<int,int> pairII;
+bool check[101] = {false};
 
-int find(vector<int>&v , int n)
+int Prim(int startNode,vector<vector<int>> & v)
 {
-    if(v[n] == n)
-        return n;
-    else
-        return v[n] = find(v,v[n]);
-}
-
-void unionParent(vector<int>&v, int a, int b)
-{
-    //이미 앞에서 루트노드를 찾고 호출하기때문에 생략가능
-    a = find(v,a);
-    b = find(v,b);
-    //더작은쪽을 부모로함
-    a < b ? v[b] = a : v[a] = b;
-}
-
-bool isConnect(vector<int>&v, int a, int b)
-{
-    int start = find(v,a);
-    int end = find(v,b);
+    int result = 0;
+    priority_queue<pairII,vector<pairII>,greater<pairII>> pq;
     
-    return start == end;
+    
+    pq.push({startNode,0});
+
+    
+    while(!pq.empty())
+    {
+        int curNode = pq.top().second;
+        int curCost = pq.top().first;
+        pq.pop();
+        
+        if(!check[curNode])
+        {
+            check[curNode] = true;
+            result += curCost;
+            
+            for(auto c : v)
+            {
+                
+                int start = c[0];
+                int end = c[1];
+                int cost = c[2];
+        
+                if(start == curNode && !check[end])
+                {
+                    pq.push({cost,end});
+                }
+                else if(end == curNode && !check[start])
+                {
+                    pq.push({cost,start});
+                }
+            }
+        }
+    }
+    
+    return result;
 }
 
 int solution(int n, vector<vector<int>> costs) {
-    int answer = 0;
-    //각노드의 부모를 저장하는벡터
-    vector<int> root(n+1);
-    
-    for(int i=0; i<=n; ++i)
-    {
-        //기본적으로 자기자신으로 초기화
-        root[i] = i;
-    }
-    
-    sort(costs.begin(),costs.end(), compare);
-    
-    for(auto c : costs)
-    {
-        int start = find(root,c[0]);
-        int end = find(root,c[1]);
-        
-        //시작노드와 끝노드의 부모가 같지않은경우 = 연결이 안되있음
-        if(!isConnect(root,c[0],c[1]))
-        {
-            answer += c[2];
-            unionParent(root,c[0],c[1]);
-        }
-        
-    }
-    
+
+    int answer =  Prim(0, costs);
     return answer;
 }
