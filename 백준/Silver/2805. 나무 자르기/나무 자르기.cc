@@ -14,12 +14,12 @@ void solution(int n, int m , vector<int> & vec)
 	while (start <= end)
 	{
 		int mid = (start + end) / 2;
-		long long int sum = 0;
+		long long sum = 0;
 
 		for (auto v : vec)
 		{
 			if (v - mid > 0)
-				sum += v - mid;
+				sum += (long long)v - mid;
 		}
 
 		if (sum < m)
@@ -27,7 +27,7 @@ void solution(int n, int m , vector<int> & vec)
 		else
 		{
 			start = mid + 1;
-			result = mid;
+			result = max(mid, result);
 		}
 	}
 
