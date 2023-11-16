@@ -25,7 +25,7 @@ void dfs(int x, int y)
 			dfs(nextX, nextY);
 		}
 	}
-	maxSize = max(maxSize, cnt);
+
 }
 
 int main()
@@ -48,6 +48,7 @@ int main()
 			{
 				dfs(i, j);
 			}
+			maxSize = max(maxSize, cnt);
 		}
 	}
 
